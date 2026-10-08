@@ -2,9 +2,9 @@ import {seed} from './data.js';
 const KEY='pawpal-v3';
 let dbPromise;
 export function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version!==3||!['pets','photos','health','behaviors','tasks','posts','activity'].every(k=>Array.isArray(s[k])))throw Error('结构损坏');return {state:s,error:''};}
+ try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version!==3||!s.family||typeof s.family.name!=='string'||typeof s.family.city!=='string'||!s.settings||!['kg','斤'].includes(s.settings.unit)||typeof s.selected!=='string'||!s.bottleFeedback||!['members','pets','photos','health','behaviors','tasks','posts','activity','events','liked','saved','reported','blocked','resourceSaved'].every(k=>Array.isArray(s[k])))throw Error('结构损坏');return {state:s,error:''};}
  const s=seed();s.legacyAvailable=!!localStorage.getItem('pawpal-v1');return {state:s,error:''};
- }catch{return {state:seed(),error:'本机数据无法读取，已显示案例。损坏数据仍保留；可在设置里导出。'};}
+ }catch{try{const raw=localStorage.getItem(KEY);if(raw&&!localStorage.getItem('pawpal-v3-recovery'))localStorage.setItem('pawpal-v3-recovery',raw);}catch{}return {state:seed(),error:'本机数据无法读取，已显示案例。可在设置里尝试导出异常数据备份；保存新记录前请先备份。'};}
 }
 export function persist(s){try{localStorage.setItem(KEY,JSON.stringify(s));return '';}catch{return '本机保存失败，可能空间不足或浏览器禁止存储。本次输入已保留，请重试或导出已有记录。';}}
 function database(){if(!dbPromise)dbPromise=new Promise((resolve,reject)=>{

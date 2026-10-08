@@ -1,0 +1,14 @@
+{
+  "name": "pawpal",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/core.cjs && node tests/states.cjs",
+    "test:privacy": "node tests/privacy.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1",
+    "sharp": "0.35.5"
+  }
+}

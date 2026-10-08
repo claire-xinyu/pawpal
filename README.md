@@ -41,3 +41,7 @@
 - [实现与验收状态](docs/IMPLEMENTATION_STATUS.md)
 - [照片导入及隐私检查](docs/PHOTO_IMPORT_REPORT.md)
 - [验证报告](docs/QA_REPORT.md)
+
+## 验证
+
+开发验证依赖仅Playwright与sharp，不影响网站运行。`npm ci` → `npx playwright install chromium` → `npm test`，另外运行`npm run test:privacy`。已有Chrome时可通过`CHROME_PATH`指定；测试不使用个人浏览器profile。截图和运行记录写入被忽略的`test-results/`。
