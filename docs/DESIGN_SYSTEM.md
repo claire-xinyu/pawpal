@@ -1,0 +1,27 @@
+# PawPal V3 设计系统
+
+方向：Apple 极简 × 日系生活杂志，以真实摄影、留白和清晰文字建立层级。四个页面共用基础组件。无卡通装饰，无远程字体依赖。
+
+|Token|值|
+|---|---|
+|背景|#F8F6F1|
+|表面|#FFFFFF|
+|主色|#627D70|
+|主按钮与强调文字|#405C50|
+|主要文字|#262B28|
+|次级文字|#687269（提升原#858B85的可读性）|
+|暖色点缀|#EBA984|
+|边框|#E8E8E2|
+|卡片圆角|18px；表单10px；弹层22px|
+|阴影|仅轻量用于漂流瓶与弹层|
+|字体|系统中文字体：PingFang SC/Noto Sans SC等|
+
+标题手机27–30px、桌面36–39px；章节19–24px；正文13–15px；辅助10–12px。辅助小字不承载唯一必要操作。间距8、12、16、20、24、32、40px。图标统一线性20px，继承文字色；按钮与交互控件常规最小高度44px。
+
+组件由 `src/utils.js`、`src/views.js` 和 `app.js` 中的共享函数提供：Button、IconButton、Tag、EmptyState、Navigation、PetAvatar、PetSelector、PhotoCard、TimelineItem、HealthRecordCard、CareTaskCard、Modal、ConfirmDialog、Toast、LoadingState和表单。所有表单包含忙碌和错误状态。弹层使用原生dialog，支持Esc、焦点约束、关闭恢复焦点；移动端使用同一弹层。
+
+手机使用四栏底部导航，安全区与内容底部留白；相册两列、其他主要内容单列。600px以上宠物、健康、发现卡片两列；1000px以上左侧导航，内容最大1100px。1440px相册三列。摄影保留纵横比，重点大图contain，卡片必要cover但不变形。
+
+页面表达：我的家以宠物照片为中心；成长为拍摄日期驱动的家庭相册；健康使用可读数字与有据记录；发现突出宠物内容和本地资源。功能操作使用统一标签，不使用陌生人约会属性。
+
+可达性：按钮和链接支持键盘、aria-label/aria-pressed/aria-current、清晰focus-visible、跳转内容链接、图片alt与消息live region。遵循prefers-reduced-motion。公开案例、本机私密、估算与演示标记必须出现在相关内容旁。
