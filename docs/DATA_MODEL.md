@@ -32,3 +32,25 @@
 新增封面字段coverPhotoId/coverMediaId支持从本宠物相册选择上传图片作为封面，刷新后重新从IndexedDB加载。导出包括仅被封面引用的图片。异常结构化数据尽可能保存到pawpal-v3-recovery，在设置可导出原始内容；浏览器完全禁止存储时无法建立备份，界面明确提示。
 
 案例社区卡另保留capturedAt，显示的是案例照片拍摄日期，不伪造历史发表日期。照护完成时间按Asia/Shanghai转换为时间线日期，不直接截取UTC日期。
+
+## V3.2 当前模型（以上为V3历史模型）
+
+当前仍保持 `version:3` 的兼容字段，增加 `schema:'3.2'` 与 `space:experience/personal`。
+
+- `pawpal-space`：当前空间偏好。
+- `pawpal-v32-experience`：体验家庭，含原V3资料与输入、模拟设备事件。
+- `pawpal-v32-personal`：独立的用户空间，无预置模拟事件或案例照片。
+- `pawpal-v3` / `pawpal-v1`：原值保留，不覆盖；V3在新体验键不存在时读取继承。
+- `pawpal-media`：继续使用原IndexedDB，上传图片随机ID引用；两个空间的引用不互相复制。
+
+`devices`：id、name、kind、capabilities、assumption、status、source。只有体验空间设 `simulated-connected`，详情明确不是真实连接。
+
+`deviceEvents`：id、petId、deviceId、kind、at（Asia/Shanghai偏移）、source:simulated、note；喂食包含dispensed/consumed（g），饮水volume（ml），如厕classification/duration（秒）/weight（kg）。不同宠物在同一设备的事件时间错开，不重复占用；实际进食不大于投粮。事件ID确定性生成，90天初始序列，补齐截至当前时间的事件，不覆盖已有修正。
+
+修正归属保存originalPetId与correctedAt，保留设备值及时间。所有摘要、图表和事件列表直接从当前归属的事件派生；不存第二份易失配的统计值。个人空间加载时剔除设备事件及设备数组，真实健康记录从不由模拟生成。
+
+趋势日聚合：进食consumed合计、饮水volume合计、如厕次数、当日最近称重。手动称重同日优先于设备模拟，图上点说明来源；缺失值为null，不补零或插值。kg/斤仅改变显示，存储仍为kg。
+
+变化提示使用截至昨日的两个相邻完整7天，数据不完整则不提示；同时查看食水厕体重与人工观察。没有诊断逻辑。
+
+元数据失败不替换内存状态，图片失败保留输入。异常数据备份继续保留在pawpal-v3-recovery。没有自动备份导入或媒体空间回收。
