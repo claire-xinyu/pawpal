@@ -1,4 +1,4 @@
-import {casePhotos,covers} from './photos.js';
+import {casePhotos,covers} from './photos.js?v=3.2.0';
 export const familyMembers=Array.from({length:5},(_,i)=>({id:'member-'+i,name:i===0?'我':`家人 ${i+1}`,initial:i===0?'我':String(i+1),source:'demo'}));
 export const initialPets=[{
  id:'weiba',name:'尾巴',sex:'母猫',species:'猫咪',breed:'中华田园猫 · 狸花',fur:'短毛',age:'约5岁',ageSource:'estimated',weightEstimate:5,weightDate:null,arrival:'2023-06',arrivalPrecision:'month',spay:'已绝育（发现时已完成，手术日期未知）',cover:covers.weiba||'',tags:['沉稳独立','温和','有边界感','爱陪妹妹玩'],

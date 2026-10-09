@@ -1,12 +1,14 @@
-import {seed} from './data.js';
-const KEY='pawpal-v3';
+import {seed} from './data.js?v=3.2.0';
+import {simulation} from './devices.js?v=3.2.0';
+import {today} from './utils.js?v=3.2.0';
+export const spaceKey=space=>'pawpal-v32-'+(space==='personal'?'personal':'experience');
 let dbPromise;
-export function load(){
- try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s.version!==3||!s.family||typeof s.family.name!=='string'||typeof s.family.city!=='string'||!s.settings||!['kg','斤'].includes(s.settings.unit)||typeof s.selected!=='string'||!s.bottleFeedback||!['members','pets','photos','health','behaviors','tasks','posts','activity','events','liked','saved','reported','blocked','resourceSaved'].every(k=>Array.isArray(s[k])))throw Error('结构损坏');return {state:s,error:''};}
- const s=seed();s.legacyAvailable=!!localStorage.getItem('pawpal-v1');return {state:s,error:''};
- }catch{try{const raw=localStorage.getItem(KEY);if(raw&&!localStorage.getItem('pawpal-v3-recovery'))localStorage.setItem('pawpal-v3-recovery',raw);}catch{}return {state:seed(),error:'本机数据无法读取，已显示案例。可在设置里尝试导出异常数据备份；保存新记录前请先备份。'};}
-}
-export function persist(s){try{localStorage.setItem(KEY,JSON.stringify(s));return '';}catch{return '本机保存失败，可能空间不足或浏览器禁止存储。本次输入已保留，请重试或导出已有记录。';}}
+function valid(s){return s.version===3&&s.family&&typeof s.family.name==='string'&&typeof s.family.city==='string'&&s.settings&&['kg','斤'].includes(s.settings.unit)&&typeof s.selected==='string'&&s.bottleFeedback&&['members','pets','photos','health','behaviors','tasks','posts','activity','events','liked','saved','reported','blocked','resourceSaved'].every(k=>Array.isArray(s[k]));}
+function fresh(space){const s=structuredClone(seed());s.space=space;s.schema='3.2';if(space==='personal'){s.family={name:'我的家',city:'深圳',district:''};s.members=[{id:'member-0',name:'我',initial:'我',source:'ownerReported'}];for(const key of ['pets','photos','health','behaviors','tasks','posts','activity','events'])s[key]=[];s.deviceEvents=[];s.devices=[];}else{s.tasks=[{id:'sample-water',petId:'erduo',title:'换一碗干净的水',assignee:'member-0',date:today(),note:'',source:'simulated',createdAt:new Date().toISOString()},{id:'sample-brush',petId:'weiba',title:'梳一梳毛，陪她玩一会儿',assignee:'member-0',date:today(),note:'',source:'simulated',createdAt:new Date().toISOString()}];}return s;}
+function normalize(s,space){s.space=space;s.schema='3.2';if(space==='experience'){const generated=simulation(),saved=new Map((s.deviceEvents||[]).map(x=>[x.id,x]));s.deviceEvents=[...saved.values(),...generated.deviceEvents.filter(x=>!saved.has(x.id))];s.simulationAnchor=generated.simulationAnchor;s.devices=generated.devices;}else{s.deviceEvents=[];s.devices=[];}s.legacyAvailable=!!localStorage.getItem('pawpal-v1')||!!localStorage.getItem('pawpal-v3');return s;}
+export function load(requested){let space=requested||'experience',key;try{if(!requested)space=localStorage.getItem('pawpal-space')==='personal'?'personal':'experience';key=spaceKey(space);const raw=localStorage.getItem(key);let s;if(raw){s=JSON.parse(raw);if(!valid(s))throw Error('结构损坏');}else if(space==='experience'&&localStorage.getItem('pawpal-v3')){s=JSON.parse(localStorage.getItem('pawpal-v3'));if(!valid(s))throw Error('旧版结构损坏');}else s=fresh(space);return {state:normalize(s,space),error:''};}catch{try{const raw=localStorage.getItem(key)||localStorage.getItem('pawpal-v3');if(raw&&!localStorage.getItem('pawpal-v3-recovery'))localStorage.setItem('pawpal-v3-recovery',raw);}catch{}const s=fresh(space);if(space==='experience')Object.assign(s,simulation());return {state:s,error:'记录暂时无法读取。原始数据已尽量保留，请先在账户中导出异常备份。'};}}
+export function persist(s){try{localStorage.setItem(spaceKey(s.space),JSON.stringify(s));return '';}catch{return '保存失败，可能空间不足或浏览器禁止存储。输入已保留，请重试或导出已有记录。';}}
+export function selectSpace(space){const result=load(space);if(result.error)return result;const error=persist(result.state);if(error)return {state:result.state,error};try{localStorage.setItem('pawpal-space',space);}catch{return {state:result.state,error:'无法切换空间，请允许浏览器保存数据后重试。'};}return result;}
 function database(){if(!dbPromise)dbPromise=new Promise((resolve,reject)=>{
  const req=indexedDB.open('pawpal-media',1);req.onupgradeneeded=()=>req.result.createObjectStore('photos');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(Error('本机图片存储不可用，请检查浏览器设置后重试。'));req.onblocked=()=>reject(Error('图片存储暂时被另一个页面占用，请关闭其他 PawPal 页面后重试。'));
  }).catch(e=>{dbPromise=null;throw e;});return dbPromise;}
