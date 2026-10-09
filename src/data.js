@@ -12,14 +12,14 @@ export const milestones=[
 ];
 export const topics=['养宠日常','一起长大','照护经验','散步日记'];
 export const demoPosts=[
- {id:'demo-dog-1',petName:'豆包',petIds:[],city:'深圳',species:'狗狗',topic:'散步日记',title:'在草地上，慢一点也很好',text:'傍晚走一小圈，给小狗留足闻闻的时间。地点和内容为演示。',image:'assets/dog.jpg',source:'demo',date:'2026-10-08',ownerId:'demo-dog',comments:[]},
- {id:'demo-dog-2',petName:'糯米',petIds:[],city:'广州',species:'狗狗',topic:'养宠日常',title:'小狗的午睡日常',text:'睡醒、伸懒腰，再找一块舒服的地方。演示动态。',image:'assets/daily.jpg',source:'demo',date:'2026-10-07',ownerId:'demo-mochi',comments:[]},
- {id:'demo-small-1',petName:'栗子',petIds:[],city:'深圳',species:'其他宠物',topic:'照护经验',title:'给仓鼠留一个安静的小角落',text:'今天整理了活动空间。照护方式需要根据动物种类确认，此条仅为界面演示。',source:'demo',date:'2026-10-06',ownerId:'demo-small',comments:[]}
+ {id:'demo-dog-1',petName:'豆包',petIds:[],city:'深圳',species:'狗狗',topic:'散步日记',title:'走了半小时，闻了二十分钟',text:'豆包每次经过这块草地，都要停下来认真闻一遍。今天没有赶路，就陪它多待了一会儿。',image:'assets/dog.jpg',source:'demo',date:'2026-10-08',ownerId:'demo-dog',comments:[]},
+ {id:'demo-dog-2',petName:'糯米',petIds:[],city:'广州',species:'狗狗',topic:'养宠日常',title:'睡醒后还要再躺五分钟',text:'糯米把下巴搁在垫子上，听见零食袋才抬了抬眼睛。',image:'assets/daily.jpg',source:'demo',date:'2026-10-07',ownerId:'demo-mochi',comments:[]},
+ {id:'demo-small-1',petName:'栗子',petIds:[],city:'深圳',species:'其他宠物',topic:'照护经验',title:'整理小窝时，它把纸条全搬走了',text:'给栗子换了纸垫料，它忙着把最喜欢的几条搬回角落。整理了一下午，最后还是按它的意思摆。',source:'demo',date:'2026-10-06',ownerId:'demo-small',comments:[]}
 ];
 export const localContents=[
- {id:'local-1',city:'深圳',district:'南山区',species:'狗狗',type:'散步路线',title:'傍晚的绿道散步',text:'一条短距离散步路线示例：先闻闻，再慢慢走，随手清理。不是已核实路线。',detail:'路线、开放规则与现场条件均未核实。仅展示路线卡的产品结构；出行前自行确认。'},
- {id:'local-2',city:'深圳',district:'福田区',species:'猫咪',type:'本地照护经验',title:'两只猫，如何分开记录饭量',text:'示例：分开摆放食盆，在记录中注明观察时间。内容为演示。',detail:'这是照护记录示例，不作为兽医建议。可以将你观察到的进食变化记入健康页。'},
- {id:'local-3',city:'深圳',district:'南山区',species:'全部',type:'宠物友好地点',title:'宠物友好休息点 · 示例',text:'提供休息与饮水的地点卡示例。虚构地点，无实际地址。',detail:'该地点为虚构演示，不可用于导航、预约或判断现实的开放状态。'},
- {id:'local-4',city:'广州',district:'天河区',species:'狗狗',type:'本地活动',title:'周末的慢走计划 · 示例',text:'展示一个养宠活动信息卡；没有真实组织者或报名。',detail:'虚构活动，仅展示信息结构。保存为本机收藏，不构成报名。'}
+ {id:'local-1',city:'深圳',district:'南山区',species:'狗狗',type:'散步路线',title:'傍晚的绿道散步',text:'想轻松走一圈，可以先看看绿道的遮阴、饮水和休息位置。',detail:'路线、开放规则与现场条件均未核实。仅展示路线卡的产品结构；出行前自行确认。'},
+ {id:'local-2',city:'深圳',district:'福田区',species:'猫咪',type:'本地照护经验',title:'两只猫，如何分开记录饭量',text:'试着分开放食盆，给每只猫单独留一点吃饭时间，再记下各自的饭量。',detail:'这是照护记录示例，不作为兽医建议。可以将你观察到的进食变化记入健康页。'},
+ {id:'local-3',city:'深圳',district:'南山区',species:'全部',type:'宠物友好地点',title:'散步途中，找个地方歇一歇',text:'带好水和拾便袋，也为伙伴留一段安静休息的时间。',detail:'该地点为虚构演示，不可用于导航、预约或判断现实的开放状态。'},
+ {id:'local-4',city:'广州',district:'天河区',species:'狗狗',type:'本地活动',title:'周末，一起慢慢走',text:'不用走很远。先从住处附近的一小圈开始，让小狗自己闻闻路上的气味。',detail:'虚构活动，仅展示信息结构。保存为本机收藏，不构成报名。'}
 ].map(x=>({...x,source:'demo'}));
 export function seed(){return {version:3,selected:'all',family:{name:'耳朵和尾巴的家',city:'深圳',district:''},members:familyMembers,pets:initialPets.map(p=>({...p})),photos:casePhotos.map(p=>({...p})),health:[],behaviors:[],tasks:[],events:[],activity:[],posts:[...['weiba','erduo'].map(id=>{const p=casePhotos.find(p=>p.petIds.length===1&&p.petIds[0]===id);const pet=initialPets.find(p=>p.id===id);return p?{id:'case-post-'+id,petName:pet.name,petIds:[id],city:'深圳',species:'猫咪',topic:'养宠日常',title:p.title,text:p.description,image:p.image,source:'library',destination:'both',date:'',capturedAt:p.capturedAt,createdAt:p.uploadedAt,ownerId:'public-case',comments:[]}:null;}).filter(Boolean),...demoPosts.map(p=>({...p}))],liked:[],saved:[],reported:[],blocked:[],bottleFeedback:{},resourceSaved:[],settings:{unit:'kg'},legacyAvailable:false};}

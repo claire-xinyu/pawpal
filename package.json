@@ -1,10 +1,10 @@
 {
   "name": "pawpal",
-  "version": "3.0.0",
+  "version": "3.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/core.cjs && node tests/states.cjs",
+    "test": "node tests/model.cjs && node tests/core.cjs && node tests/states.cjs",
     "test:privacy": "node tests/privacy.cjs"
   },
   "devDependencies": {
